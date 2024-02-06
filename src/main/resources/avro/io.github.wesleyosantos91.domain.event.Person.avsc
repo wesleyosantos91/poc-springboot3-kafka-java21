@@ -1,0 +1,84 @@
+{
+  "type": "record",
+  "name": "Person",
+  "namespace": "io.github.wesleyosantos91.domain.event",
+  "doc": "Esquema que define uma pessoa.",
+  "fields": [
+    {
+      "name": "id",
+      "type": "int",
+      "doc": "O identificador único da pessoa."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "doc": "O nome da pessoa."
+    },
+    {
+      "name": "birth_date",
+      "type": {
+        "type": "int",
+        "logicalType": "date"
+      },
+      "doc": "A data de nascimento da pessoa."
+    },
+    {
+      "name": "emails",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "doc": "Os endereços de e-mail da pessoa."
+    },
+    {
+      "name": "address",
+      "type": [
+        "null",
+        {
+          "type": "record",
+          "name": "Address",
+          "fields": [
+            {
+              "name": "street",
+              "type": [
+                "null",
+                "string"
+              ],
+              "doc": "O nome da rua.",
+              "default": null
+            },
+            {
+              "name": "city",
+              "type": [
+                "null",
+                "string"
+              ],
+              "doc": "O nome da cidade.",
+              "default": null
+            },
+            {
+              "name": "state",
+              "type": [
+                "null",
+                "string"
+              ],
+              "doc": "O nome do estado.",
+              "default": null
+            },
+            {
+              "name": "zipcode",
+              "type": [
+                "null",
+                "string"
+              ],
+              "doc": "O código postal.",
+              "default": null
+            }
+          ]
+        }
+      ],
+      "doc": "O endereço da pessoa. Pode ser nulo.",
+      "default": null
+    }
+  ]
+}

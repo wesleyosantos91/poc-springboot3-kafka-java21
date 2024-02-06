@@ -17,7 +17,7 @@ public class TestPocSpringboot3Java21Application {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.from(PocSpringboot3Java21Application::main).with(TestPocSpringboot3Java21Application.class).run(args);
+		SpringApplication.from(Application::main).with(TestPocSpringboot3Java21Application.class).run(args);
 	}
 
 }

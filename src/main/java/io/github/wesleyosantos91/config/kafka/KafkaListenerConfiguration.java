@@ -1,10 +1,8 @@
-package io.github.wesleyosantos91.config;
+package io.github.wesleyosantos91.config.kafka;
 
+import io.github.wesleyosantos91.config.kafka.filter.KafkaCustomFilterStrategy;
 import io.github.wesleyosantos91.domain.event.Person;
-import io.github.wesleyosantos91.domain.event.header.HeaderKafkaContant;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.common.header.Header;
-import org.graalvm.nativeimage.c.CHeader;
+import io.github.wesleyosantos91.domain.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +11,12 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
-import org.springframework.kafka.listener.adapter.RecordFilterStrategy;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.ExponentialBackOff;
+import org.springframework.util.backoff.FixedBackOff;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executors;
-
-import static io.github.wesleyosantos91.domain.event.header.HeaderKafkaContant.PRODUCT;
 
 @Configuration
 public class KafkaListenerConfiguration {
@@ -36,9 +33,11 @@ public class KafkaListenerConfiguration {
     @Value("${spring.kafka.listener.observation-enabled}")
     private Boolean observationEnabled;
 
-    @Value("#{'${spring.kafka.consumer.valid.product}'.split(',')}")
-    private List<String> productsValids;
+    private final KafkaCustomFilterStrategy kafkaCustomFilterStrategy;
 
+    public KafkaListenerConfiguration(KafkaCustomFilterStrategy kafkaCustomFilterStrategy) {
+        this.kafkaCustomFilterStrategy = kafkaCustomFilterStrategy;
+    }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Person> listenerContainerFactory(ConsumerFactory consumerFactory) {
@@ -47,30 +46,12 @@ public class KafkaListenerConfiguration {
         ConcurrentKafkaListenerContainerFactory<String, Person> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConcurrency(concurrency);
         factory.setAckDiscarded(true);
-        factory.setRecordFilterStrategy(recordFilterDefaultStrategy()); // TODO IMPLEMENTAR FILTRO PELO HEADER
+        factory.setRecordFilterStrategy(kafkaCustomFilterStrategy);
         factory.setConsumerFactory(consumerFactoryEdited);
         factory.getContainerProperties().setPollTimeout(maxPollRecords);
         factory.getContainerProperties().setAckMode(AckMode.valueOf(ackMode));
         factory.getContainerProperties().setObservationEnabled(observationEnabled);
         factory.getContainerProperties().setListenerTaskExecutor(new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor()));
         return factory;
-    }
-
-    private RecordFilterStrategy<String, GenericRecord> recordFilterDefaultStrategy() {
-        return filterEvents(productsValids);
-    }
-
-    private RecordFilterStrategy<String, GenericRecord> filterEvents(List<String> productsValids) {
-        return consumerRecord -> isProductValid(consumerRecord.headers().lastHeader(PRODUCT), productsValids);
-    }
-
-    private boolean isProductValid(Header header, List<String> productsValids) {
-        if (Objects.isNull(header)) {
-            return true;
-        }
-
-        String value = new String(header.value());
-
-        return !productsValids.contains(value);
     }
 }

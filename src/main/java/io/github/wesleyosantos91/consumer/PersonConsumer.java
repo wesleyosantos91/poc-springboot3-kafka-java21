@@ -1,11 +1,9 @@
 package io.github.wesleyosantos91.consumer;
 
 import io.github.wesleyosantos91.domain.event.Person;
-import io.github.wesleyosantos91.domain.exception.BusinessException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;

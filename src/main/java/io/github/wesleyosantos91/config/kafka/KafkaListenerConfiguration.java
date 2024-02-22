@@ -2,7 +2,6 @@ package io.github.wesleyosantos91.config.kafka;
 
 import io.github.wesleyosantos91.config.kafka.filter.KafkaCustomFilterStrategy;
 import io.github.wesleyosantos91.domain.event.Person;
-import io.github.wesleyosantos91.domain.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +10,6 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
-import org.springframework.kafka.listener.DefaultErrorHandler;
-import org.springframework.util.backoff.BackOff;
-import org.springframework.util.backoff.ExponentialBackOff;
-import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.concurrent.Executors;
 

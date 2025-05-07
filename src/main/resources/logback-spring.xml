@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property resource="application.properties"/>
+    <property resource="application.yml"/>
     <contextName>${spring.application.name}</contextName>
     <springProfile name="!non-json-logs">
         <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">

@@ -1,7 +1,8 @@
-package io.github.wesleyosantos91.config.kafka;
+package io.github.wesleyosantos91.infrastructure.kafka;
 
-import io.github.wesleyosantos91.config.kafka.filter.KafkaCustomFilterStrategy;
+import io.github.wesleyosantos91.infrastructure.kafka.filter.KafkaCustomFilterStrategy;
 import io.github.wesleyosantos91.domain.event.Person;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,7 @@ import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import java.util.concurrent.Executors;
 
 @Configuration
-public class KafkaListenerConfiguration {
+public class KafkaListenerConfig {
 
     @Value("${spring.kafka.listener.ack-mode}")
     private String ackMode;
@@ -30,7 +31,7 @@ public class KafkaListenerConfiguration {
 
     private final KafkaCustomFilterStrategy kafkaCustomFilterStrategy;
 
-    public KafkaListenerConfiguration(KafkaCustomFilterStrategy kafkaCustomFilterStrategy) {
+    public KafkaListenerConfig(KafkaCustomFilterStrategy kafkaCustomFilterStrategy) {
         this.kafkaCustomFilterStrategy = kafkaCustomFilterStrategy;
     }
 

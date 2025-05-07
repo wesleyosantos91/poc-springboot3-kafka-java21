@@ -1,4 +1,4 @@
-package io.github.wesleyosantos91.config.kafka.filter;
+package io.github.wesleyosantos91.infrastructure.kafka.filter;
 
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

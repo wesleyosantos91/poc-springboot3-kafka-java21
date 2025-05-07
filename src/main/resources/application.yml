@@ -1,0 +1,71 @@
+server:
+  port: 8080
+spring:
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: sandbox-sprinboot
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:19092
+      group-id: person-consumer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      enable-auto-commit: false
+      concurrency: 3
+      max-poll-records: 1
+      valid.product: PENSION
+      properties:
+        specific.avro.reader: true
+    listener:
+      ack-mode: MANUAL_IMMEDIATE
+      observation-enabled: true
+    properties:
+        schema.registry.url: http://localhost:8181
+management:
+  datadog:
+    metrics:
+      export:
+        api-key: ${DATADOG_API_KEY}
+        application-key: ${DATADOG_APP_KEY}
+        uri: ${DATADOG_URI}
+        step: 10s
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+    baggage:
+      correlation:
+        enabled: true
+        fields: [ x-correlationID ]
+      remote-fields: [ x-correlationID ]
+  metrics:
+    enable:
+      all: true
+      jvm: true
+      tags:
+          enabled: true
+      kafka:
+        enabled: true
+        tags:
+          enabled: true
+    tags:
+      appplication: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - metrics
+  endpoint:
+    health:
+      show-details: always
+  observations:
+    key-values:
+      my_custom_tag: ${spring.application.name}
+
+app:
+  kafka:
+    topic: person

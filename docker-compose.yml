@@ -70,7 +70,7 @@ services:
     ports:
       - "8001:8000"
     environment:
-      SCHEMAREGISTRY_URL: http://schema-registry:'8181'
+      SCHEMAREGISTRY_URL: http://schema-registry:8181
       PROXY: "true"
 
   kafdrop:
